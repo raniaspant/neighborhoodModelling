@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class IoTScript : MonoBehaviour {
     public string MACAddress; //how objects are identified on any wireless network
@@ -10,6 +11,7 @@ public class IoTScript : MonoBehaviour {
     public double SignalRange = 5;
     public Sensation MySensorCapabilities;
     public Sensation MyAlertCapabilities;
+    public Emergency EmergencySource = null; //If null, this is an IoT object. If not null, this is the source of an emergency.
 
     [Flags]
     public enum Sensation : int
@@ -68,17 +70,29 @@ public class IoTScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        List<Broadcast> incomingBroadcasts = new List<Broadcast>(); //TODO: Get all broadcasts from the collider
+        //If I am the source of an emergency, broadcast a value halfway between that type of emergency's min and max parameter
+        if (EmergencySource != null) ActiveBroadcasts.Add(new Broadcast { DataType = EmergencySource.Measure, Payload = (EmergencySource.Min + EmergencySource.Max) / 2 });
+    }
+
+    protected double GetDistance(Transform A, Transform B)
+    {
+        return Math.Sqrt(Math.Pow(A.position.x - B.position.x, 2) + Math.Pow(A.position.y - B.position.y, 2));
+    }
+
+    // Update is called once per frame
+    void Update () {
+        if (EmergencySource != null) return; //If I'm the source of an emergency, I broadcast forever!
+
+        List<Broadcast> incomingBroadcasts = new List<Broadcast>();
         ActiveBroadcasts.Clear(); //Forget what I was broadcasting before
 
-        //TODO: Receive broadcasts, if any
-        //TODO: First, need a collider
-        //ActiveBroadcasts.AddRange(incomingBroadcasts);
+        //Receive broadcasts, if any. Check for any IoTScript nearby with ActiveBroadcasts and add those to my incomingBroadcasts list.
+        Scene activeScene = SceneManager.GetActiveScene();
+        foreach (var nearbyObject in activeScene.GetRootGameObjects())
+        {
+            var thing = nearbyObject.AddComponent<IoTScript>() as IoTScript;
+            if (thing != null && GetDistance(nearbyObject.transform, this.transform) < thing.SignalRange * 10) incomingBroadcasts.AddRange(thing.ActiveBroadcasts); //TODO: The * 10 is for testing... The SmartTV is about 42 units away from the SmartPhone Ρανια made.
+        }
 
         //Loop through all incoming broadcasts
         //If the source is empty string, you need a sensor to rebroadcast
@@ -108,7 +122,7 @@ public class IoTScript : MonoBehaviour {
             else
             {
                 //Digital signal (a wireless broadcast)
-                ActiveBroadcasts.Add(bc); //Note: broadcasts will be transmitted infinitely once they begin.
+                ActiveBroadcasts.Add(bc); //Note: broadcasts will be retransmitted infinitely once they begin if there are two devices in range of one another.
             }
         }
 
@@ -134,8 +148,6 @@ public class IoTScript : MonoBehaviour {
                 }
             }
         }
-        //TODO: Need a signal (emergency) source object to emit wind, temperature, or audio values that I can detect.
-
-        //TODO: Broadcast the ActiveBroadcasts list to other IoT devices and humans via a collider
+        //TODO: Need a signal (emergency) source object to emit wind, temperature, or audio values that I can detect. Just stick an IoTScript on it with MySensorCapabilities = 0 and EmergencySource = Emergency.Fire or Tornado or Gunfire.
     }
 }
