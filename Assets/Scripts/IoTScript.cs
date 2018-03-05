@@ -90,7 +90,7 @@ public class IoTScript : MonoBehaviour {
         Scene activeScene = SceneManager.GetActiveScene();
         foreach (var nearbyObject in activeScene.GetRootGameObjects())
         {
-            var thing = nearbyObject.AddComponent<IoTScript>() as IoTScript;
+            var thing = nearbyObject.GetComponent<IoTScript>() as IoTScript;
             if (thing != null && GetDistance(nearbyObject.transform, this.transform) < thing.SignalRange * 10) incomingBroadcasts.AddRange(thing.ActiveBroadcasts); //TODO: The * 10 is for testing... The SmartTV is about 42 units away from the SmartPhone Ρανια made.
         }
 
