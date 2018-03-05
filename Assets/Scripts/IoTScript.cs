@@ -71,6 +71,12 @@ public class IoTScript : MonoBehaviour {
     // Use this for initialization
     void Start () {
         //If I am the source of an emergency, broadcast a value halfway between that type of emergency's min and max parameter
+        if(gameObject.tag == "Fire")
+            EmergencySource = Emergency.Fire;
+        if (gameObject.tag == "Gunfire")
+            EmergencySource = Emergency.Gunfire;
+        if (gameObject.tag == "Tornado")
+            EmergencySource = Emergency.Tornado;
         if (EmergencySource != null) ActiveBroadcasts.Add(new Broadcast { DataType = EmergencySource.Measure, Payload = (EmergencySource.Min + EmergencySource.Max) / 2 });
     }
 
