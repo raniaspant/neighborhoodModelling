@@ -21,6 +21,10 @@ public class ToggleScript : MonoBehaviour {
     public GameObject[] peopleInHouseWithSmartTV;
     public GameObject guyWithCell;
     public GameObject smartTV;
+    public GameObject guyWithGun;
+    public GameObject[] peopleWithShooter;
+    public GameObject Alexa;
+    public GameObject[] peopleWithAlexa;
 
     // Use this for initialization
     void Start () {
@@ -58,7 +62,7 @@ public class ToggleScript : MonoBehaviour {
             radius.GetComponent<Renderer>().material.color = Color.red;
             person.GetComponent<PlayerScript>().shouldFlee = true;
         }
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         guyWithCell.GetComponent<Renderer>().material.color = Color.yellow;
         guyWithCell.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = Color.yellow;
         yield return new WaitForSeconds(1);
@@ -69,10 +73,24 @@ public class ToggleScript : MonoBehaviour {
             person.GetComponent<PlayerScript>().shouldFlee = true;
         }
         guyWithCell.GetComponent<PlayerScript>().shouldFlee = true;
+        yield return new WaitForSeconds(2);
+        Alexa.GetComponent<Renderer>().material.color = Color.yellow;
+        yield return new WaitForSeconds(1);
+        foreach (GameObject person in peopleWithAlexa)
+        {
+            GameObject radius = person.transform.GetChild(0).gameObject;
+            radius.GetComponent<Renderer>().material.color = Color.red;
+            person.GetComponent<PlayerScript>().shouldFlee = true;
+        }
 
     }
 
-    public void toggleGunfire()
+    public void clickGunfire()
+    {
+        StartCoroutine(toggleGunfire());
+    }
+
+    IEnumerator toggleGunfire()
     {
         gunfire.enabled = true;
         tornado.enabled = false;
@@ -81,6 +99,44 @@ public class ToggleScript : MonoBehaviour {
         FireObject.SetActive(false);
         GunfireObject.SetActive(true);
         TornadoObject.SetActive(false);
+        // TO BE DELETED AFTER PRESENTATION - Dummy work.
+        guyWithGun.GetComponent<Renderer>().material.color = Color.magenta;
+        guyWithGun.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = Color.magenta;
+        foreach (GameObject person in peopleWithShooter)
+        {
+            GameObject radius = person.transform.GetChild(0).gameObject;
+            radius.GetComponent<Renderer>().material.color = Color.red;
+            person.GetComponent<PlayerScript>().shouldFlee = true;
+        }
+        yield return new WaitForSeconds(2);
+        Alexa.GetComponent<Renderer>().material.color = Color.yellow;
+        yield return new WaitForSeconds(1);
+        foreach (GameObject person in peopleWithAlexa)
+        {
+            GameObject radius = person.transform.GetChild(0).gameObject;
+            radius.GetComponent<Renderer>().material.color = Color.red;
+            person.GetComponent<PlayerScript>().shouldFlee = true;
+        }
+        yield return new WaitForSeconds(1);
+        smartTV.GetComponent<Renderer>().material.color = Color.yellow;
+        yield return new WaitForSeconds(1);
+        foreach (GameObject person in peopleInHouseWithSmartTV)
+        {
+            GameObject radius = person.transform.GetChild(0).gameObject;
+            radius.GetComponent<Renderer>().material.color = Color.red;
+            person.GetComponent<PlayerScript>().shouldFlee = true;
+        }
+        yield return new WaitForSeconds(2);
+        guyWithCell.GetComponent<Renderer>().material.color = Color.yellow;
+        guyWithCell.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = Color.yellow;
+        yield return new WaitForSeconds(1);
+        foreach (GameObject person in peopleInHouseWithCell)
+        {
+            GameObject radius = person.transform.GetChild(0).gameObject;
+            radius.GetComponent<Renderer>().material.color = Color.red;
+            person.GetComponent<PlayerScript>().shouldFlee = true;
+        }
+        guyWithCell.GetComponent<PlayerScript>().shouldFlee = true;
     }
 
     //TO BE DELETED
@@ -109,10 +165,19 @@ public class ToggleScript : MonoBehaviour {
             radius.GetComponent<Renderer>().material.color = Color.red;
             person.GetComponent<PlayerScript>().shouldFlee = true;
         }
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         smartTV.GetComponent<Renderer>().material.color = Color.yellow;
         yield return new WaitForSeconds(1);
         foreach (GameObject person in peopleInHouseWithSmartTV)
+        {
+            GameObject radius = person.transform.GetChild(0).gameObject;
+            radius.GetComponent<Renderer>().material.color = Color.red;
+            person.GetComponent<PlayerScript>().shouldFlee = true;
+        }
+        yield return new WaitForSeconds(2);
+        Alexa.GetComponent<Renderer>().material.color = Color.yellow;
+        yield return new WaitForSeconds(1);
+        foreach (GameObject person in peopleWithAlexa)
         {
             GameObject radius = person.transform.GetChild(0).gameObject;
             radius.GetComponent<Renderer>().material.color = Color.red;
